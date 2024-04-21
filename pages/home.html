@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Groupie Tracker</title>
+        <link rel="stylesheet" href="style.css">
+
+    </head>
+
+    <body>
+        <div class="heading">
+            <h1>Groupie Tracker</h1>
+        </div>
+
+        <div class="searchPos">
+            <form class="search-container" action="/search" method="GET">
+                <input list="browse" name="input" type="text" id="search-bar" placeholder="What can I help you with today?">
+                <a href="#"><img class="search-icon" src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"></a>
+            </form>
+
+            <datalist id="browse">
+                {{range .Artist}}
+                    <option value="{{.Name}}">{{.Name}}</option>
+                        {{range .Members}}
+                            <option value="{{.}}">{{.}}</option>
+                        {{end}}
+                {{end}}
+            </datalist>
+        </div>
+
+        <div class="container">
+            {{range .Artist}}
+                <div class="card">
+                    <div class="imgBx">
+                        <img src="{{.Image}}" alt="{{.Name}}">
+                        <img src="C:\Users\use\Bahrain-Polytechnic\Pictures\Saved Pictures" alt="">
+                    </div>
+
+                    <div class="content">
+                        <h2>{{.Name}}</h2>
+                        <p><b>Members:</b></p>
+                        <ul class="members-list">
+                            {{range .Members}}
+                            <li>{{.}}</li>
+                            {{end}}
+                        </ul>
+
+                        <p><a href="/info">View More</a></p>
+                    </div>
+                </div>
+            {{end}}
+        </div>
+    </body>
+</html>

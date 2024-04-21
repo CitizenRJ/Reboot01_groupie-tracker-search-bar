@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/dist/style.css" rel="stylesheet" />
+    <link rel="shortcut icon" href="/static/pics/fav_icon.png" type="image/png">
+    <title>Informations</title>
+</head>
+
+<body>
+    <h1 class="text-base mt-1 sticky"><a href="/">Groupi<span class="text-mwg">e-T</span>racker™</a></h1>
+    <div class="text-center text-4xl mt-12">Info<span class="text-mwg">rmat</span>ions</div>
+    <div class="text-center object-center grid grid-cols-3 grid-rows-2 gap-0 justify-center items-center">
+        <div>
+            {{.Artist.Name}}
+            <div class=" text-mwg">
+                ({{.Artist.Creation_date}})
+            </div>
+            <div class="image">
+                <img class="rounded-2xl w-60 h-60" src="{{.Artist.Image}}">
+            </div>
+        </div>
+        <div span>
+            <h3><i class="text-mwg">Members</i></h3>
+            {{range .Artist.Members}}
+            <ul>{{.}}</ul>
+            {{end}}
+        </div>
+        <div span>
+            <p><i class="text-mwg">First album release date</i></p>
+            <p>{{.Artist.First_ablbum}}</p>
+        </div>
+        <div class="col-start-1" span>
+            <p><i class="text-mwg">Locations & Dates</i></p>
+            {{ range $artist := .All}}
+            {{ range $t:= $artist }}
+            <p>{{ $t }}</p>
+            {{ end }}
+            <br />
+            {{ end }}
+        </div>
+        <div class="col-span-2 flex justify-center">
+            <div class="w-50 h-50">
+                <img src="{{.Carte}}" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

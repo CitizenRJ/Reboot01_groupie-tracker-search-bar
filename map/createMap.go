@@ -30,7 +30,7 @@ func CreateMap(allData gpd.Data, index int) string {
 				hasDash = true
 			}
 		}
-		apiURL = "MAP API LINK" + locationName + "MAP API TOKEN" // insert map api plz
+		apiURL = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + locationName + ".json?access_token=pk.eyJ1IjoibWF0c3VlbGwiLCJhIjoiY2xkbjNoMTgzMGZseDN1bHgybjgwbmFnOCJ9.qUR-JuwsRM69PeuHEcVo4A"
 
 		response, _ := http.Get(apiURL)
 		responseData, _ := io.ReadAll(response.Body)
@@ -39,15 +39,15 @@ func CreateMap(allData gpd.Data, index int) string {
 		featureCollections = append(featureCollections, featureCollection)
 	}
 
-	mapURL = "MAP API LINK" + "MAP API TOKEN" // insert map api plz
+	mapURL = "https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/"
 
 	for i, feature := range featureCollections {
 		longitude := strconv.FormatFloat(feature.Features[0].Center[0], 'g', 9, 32)
 		latitude := strconv.FormatFloat(feature.Features[0].Center[1], 'g', 9, 32)
 		if i == len(featureCollections)-1 {
-			mapURL += "Insert map pin" + longitude + "," + latitude + ")" + "map functions token zoom etc" // insert map api plz
+			mapURL += "pin-l-music+f74e4e(" + longitude + "," + latitude + ")" + "/20,0,0/500x500?access_token=pk.eyJ1IjoibWF0c3VlbGwiLCJhIjoiY2xkbjNoMTgzMGZseDN1bHgybjgwbmFnOCJ9.qUR-JuwsRM69PeuHEcVo4A"
 		} else {
-			mapURL += "Insert map pin" + longitude + "," + latitude + ")," // insert map api plz
+			mapURL += "pin-l-music+f74e4e(" + longitude + "," + latitude + "),"
 		}
 	}
 

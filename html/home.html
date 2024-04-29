@@ -22,10 +22,13 @@
 
             <datalist id="browse">
                 {{range .Artist}}
-                    <option value="{{.Name}}">{{.Name}}</option>
+                    <option value="{{.Name}}">{{.Name}} - artist/band name</option>
                         {{range .Members}}
-                            <option value="{{.}}">{{.}}</option>
+                            <option value="{{.}}">{{.}} - members</option>
                         {{end}}
+                    <option value="{{.Locations}}">{{.Locations}} - locations</option>
+                    <option value="{{.First_album}}">{{.First_album}} - first album date</option>
+                    <option value="{{.Concert_dates}}">{{.Concert_dates}} - creation date</option>
                 {{end}}
             </datalist>
         </div>

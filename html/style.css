@@ -143,3 +143,65 @@ a:hover {
   background-color: #008ABF;
   border-radius: 25px;
 }
+
+.title {
+  text-align: center;
+  padding: 10px;
+  color: #888c89;
+  font-size: 40px;
+}
+
+.artist {
+  text-align: center;
+  padding-top: 10px;
+  color: #888c89;
+  font-size: 40px;
+}
+
+.bandImage {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  text-align: center;
+  padding-top: 2%;
+}
+
+.details {
+  text-align: center;
+  padding-top: 1%;
+}
+
+.details p {
+  text-align: center;
+  justify-content: center;
+  padding-right: 50px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.dates p {
+  padding-top: 2%;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0%;
+}
+
+.relation p {
+  padding: 0%;
+  margin: 0%;
+  margin-top: 1%;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+.bold {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.mini {
+  margin: 0%;
+  padding: 0%;
+}

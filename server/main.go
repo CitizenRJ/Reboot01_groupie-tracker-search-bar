@@ -31,7 +31,7 @@ func main() {
 	http.HandleFunc("/filter", handleFilter)
 	http.HandleFunc("/info", handleInfos)
 	http.HandleFunc("/style.css", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "../pages/style.css")
+		http.ServeFile(w, r, "../html/style.css")
 	})
 	fs := http.FileServer(http.Dir("./"))
 	http.Handle("/static/", http.StripPrefix("/", fs))
@@ -42,7 +42,7 @@ func main() {
 // It executes the html template, passing the allData struct as data.
 func handleIndex(responseWriter http.ResponseWriter, request *http.Request) {
 	var templateInstance *template.Template
-	templateInstance = template.Must(template.ParseFiles("../pages/home.html")) //home html page
+	templateInstance = template.Must(template.ParseFiles("../html/home.html")) //home html page
 	templateInstance.Execute(responseWriter, allData)
 }
 
@@ -58,9 +58,9 @@ func handleSearch(w http.ResponseWriter, r *http.Request) {
 	resultSet := gpf.SearchData(query, parsedQuery, allData)
 	var pageTemplate *template.Template
 	if len(resultSet.Artist) == 0 {
-		pageTemplate = template.Must(template.ParseFiles("../pages/home.html")) // no results page
+		pageTemplate = template.Must(template.ParseFiles("../html/home.html")) // no results page
 	} else {
-		pageTemplate = template.Must(template.ParseFiles("../pages/home.html")) // artists page
+		pageTemplate = template.Must(template.ParseFiles("../html/home.html")) // artists page
 	}
 	pageTemplate.Execute(w, resultSet)
 }
@@ -87,9 +87,9 @@ func handleFilter(w http.ResponseWriter, r *http.Request) {
 	tabButton = append(tabButton, memberButton1, memberButton2, memberButton3, memberButton4, memberButton5, memberButton6, memberButton7, memberButton8)
 	filteredData := gpf.FilterData(allData, allMembersButton, tabButton, cityFilter, creationDateFilter, albumDateFilter)
 	var templateInstance *template.Template
-	templateInstance = template.Must(template.ParseFiles("../pages/home.html")) // no results page
+	templateInstance = template.Must(template.ParseFiles("../html/home.html")) // no results page
 	if len(filteredData.Artist) == 0 {
-		templateInstance = template.Must(template.ParseFiles("../pages/home.html")) // artists page
+		templateInstance = template.Must(template.ParseFiles("../html/home.html")) // artists page
 	}
 	templateInstance.Execute(w, filteredData)
 }
@@ -105,6 +105,6 @@ func handleInfos(responseWriter http.ResponseWriter, request *http.Request) {
 	artistIdentifier = artistIdentifier - 1
 	artistInformation := gpf.InfoArtist(allData, artistIdentifier)
 	var templatePointer *template.Template
-	templatePointer = template.Must(template.ParseFiles("../pages/info.html")) // info html page
+	templatePointer = template.Must(template.ParseFiles("../html/info.html")) // info html page
 	templatePointer.Execute(responseWriter, artistInformation)
 }

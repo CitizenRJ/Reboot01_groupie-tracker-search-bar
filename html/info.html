@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> {{.Artist.Name}} </title>
+        <link rel="stylesheet" href="/style.css">
+        <link rel="icon" href="{{.Artist.Image}}">
+    </head>
+
+    <body>
+        <h1 class="title">Groupie Tracker</h1>
+        <h1 class="artist">{{.Artist.Name}}</h1>
+
+        <div class="dates">
+            <p class="bold"> Creation Date: {{.Artist.Creation_date}} <br>
+            Fist Album: {{.Artist.First_album}} </p>
+        </div>
+
+        <div class="bandImage">
+            <img src="{{.Artist.Image}}" alt="{{.Artist.Name}}">
+        </div>
+
+        <div class="details">
+            <ul class="members-list">
+                <p>Members:</p>
+                {{range .Artist.Members}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+        </div>
+
+        <div class="relation">
+            <p class="bold">Locations & Dates</p>
+            <p class="mini"> {{ range $artist := .All}} </p>
+            <p> {{ range $t:= $artist }} </p>
+            <p>{{ $t }}</p>
+            <p> {{ end }} </p>
+            <p> {{ end }} </p>
+        </div>
+    </body>
+</html>

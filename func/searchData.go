@@ -2,7 +2,19 @@ package groupie
 
 import (
 	gpd "groupie/data"
+	"strings"
 )
+
+// isArtistUnique checks if an artist is unique based on both the artist's name and the member's name.
+func isArtistUnique(artist gpd.Artists, bandMembers map[string]bool) bool {
+	for _, member := range artist.Members {
+		key := artist.Name + member
+		if bandMembers[key] {
+			return false
+		}
+	}
+	return true
+}
 
 // SearchData filters the dataset based on the search term and search type.
 // It returns a subset of the data where the search term matches any artist's name,
@@ -12,19 +24,30 @@ import (
 // The function ensures no duplicate artists are included in the results.
 func SearchData(searchTerm string, searchType int, allData gpd.Data) gpd.Data {
 	var dataSearch gpd.Data
-	bandMembers := []string{}
+	bandMembers := make(map[string]bool)
+	searchTerm = strings.ToLower(searchTerm)
+
 	if searchType == 0 {
-		for i := 0; i < (len(allData.Artist)); i++ {
+		for i := 0; i < len(allData.Artist); i++ {
+			artist := allData.Artist[i]
 			for _, location := range allData.Location[i].Locations {
-				if (location == searchTerm || allData.Artist[i].Name == searchTerm || allData.Artist[i].First_album == searchTerm) && !Isin(allData.Artist[i].Name, bandMembers) {
-					dataSearch.Artist = DisplayData(i, dataSearch, allData)
-					bandMembers = append(bandMembers, allData.Artist[i].Name)
+				if strings.ToLower(location) == searchTerm || strings.ToLower(artist.Name) == searchTerm || strings.ToLower(artist.First_album) == searchTerm {
+					if isArtistUnique(artist, bandMembers) {
+						dataSearch.Artist = append(dataSearch.Artist, artist)
+						for _, member := range artist.Members {
+							bandMembers[artist.Name+member] = true
+						}
+					}
 				}
 			}
-			for _, member := range allData.Artist[i].Members {
-				if member == searchTerm && !Isin(member, bandMembers) {
-					dataSearch.Artist = DisplayData(i, dataSearch, allData)
-					bandMembers = append(bandMembers, allData.Artist[i].Name)
+			for _, member := range artist.Members {
+				if strings.ToLower(member) == searchTerm {
+					if isArtistUnique(artist, bandMembers) {
+						dataSearch.Artist = append(dataSearch.Artist, artist)
+						for _, member := range artist.Members {
+							bandMembers[artist.Name+member] = true
+						}
+					}
 				}
 			}
 		}
@@ -32,9 +55,12 @@ func SearchData(searchTerm string, searchType int, allData gpd.Data) gpd.Data {
 
 	if searchType != 0 {
 		for i := 0; i < len(allData.Artist); i++ {
-			if allData.Artist[i].Creation_date == searchType && !Isin(allData.Artist[i].Name, bandMembers) {
-				dataSearch.Artist = DisplayData(i, dataSearch, allData)
-				bandMembers = append(bandMembers, allData.Artist[i].Name)
+			artist := allData.Artist[i]
+			if artist.Creation_date == searchType && isArtistUnique(artist, bandMembers) {
+				dataSearch.Artist = append(dataSearch.Artist, artist)
+				for _, member := range artist.Members {
+					bandMembers[artist.Name+member] = true
+				}
 			}
 		}
 	}

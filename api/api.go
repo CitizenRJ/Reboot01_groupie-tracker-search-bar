@@ -38,6 +38,27 @@ func GetData() (gpd.Date, []gpd.Artists, gpd.GetLocation, gpd.Relations) {
 	ArtistsData := []gpd.Artists{}
 	json.Unmarshal(responseDataArtists, &ArtistsData)
 
+	// Populate additional fields for each artist
+	for i := range ArtistsData {
+		// Populate Locations field
+		if ArtistsData[i].Id < len(GroupData.Location) {
+			ArtistsData[i].Locations = GroupData.Location[ArtistsData[i].Id].Locations
+		} else {
+			// Handle the case where the artist ID is out of range
+			continue
+		}
+		// Populate ConcertDates field
+		concertDates := []string{}
+		for _, dateId := range ArtistsData[i].Relations {
+			for _, date := range GroupData.Date {
+				if date.Id == dateId {
+					concertDates = append(concertDates, date.Dates...)
+				}
+			}
+		}
+		ArtistsData[i].ConcertDates = concertDates
+	}
+
 	// Fetch and unmarshal Locations data
 	responseLocation, _ := http.Get(ApiData.Locations)
 	responseDataLocation, _ := io.ReadAll(responseLocation.Body)

@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Groupie Tracker</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
@@ -22,18 +21,8 @@
         </form>
 
         <datalist id="browse">
-            {{range .Artist}}
-            <option value="{{.Name}}">{{.Name}} - artist/band name</option>
-            {{range .Members}}
-            <option value="{{.}}">{{.}} - members</option>
-            {{end}}
-            {{range .Locations}}
-            <option value="{{.}}">{{.}} - locations</option>
-            {{end}}
-            <option value="{{.First_album}}">{{.First_album}} - first album date</option>
-            {{range .ConcertDates}}
-            <option value="{{.}}">{{.}} - concert date</option>
-            {{end}}
+            {{range .All}}
+            <option value="{{.}}">{{.}}</option>
             {{end}}
         </datalist>
     </div>
@@ -43,7 +32,6 @@
         <div class="card">
             <div class="imgBx">
                 <img src="{{.Image}}" alt="{{.Name}}">
-                <img src="C:\Users\use\Bahrain-Polytechnic\Pictures\Saved Pictures" alt="">
             </div>
 
             <div class="content">

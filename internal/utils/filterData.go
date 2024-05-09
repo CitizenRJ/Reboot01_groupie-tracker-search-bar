@@ -1,7 +1,7 @@
 package groupie
 
 import (
-	gpd "groupie/data"
+	gpd "groupie/internal/models"
 	"strconv"
 	"strings"
 )
@@ -11,7 +11,7 @@ import (
 func FilterData(allData gpd.Data, buttonAll string, tabButtons []int, selectedCity string, minCreationYear int, minAlbumYear int) gpd.Data {
 	var filteredData gpd.Data
 	var albumYears []int
-	var filteredNames []string
+	filteredNames := []string{}
 
 	for i := 0; i < (len(allData.Artist)); i++ {
 		albumYearStr := strings.Split(allData.Artist[i].First_album, "-")[2]

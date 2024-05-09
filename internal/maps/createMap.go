@@ -2,7 +2,7 @@ package groupie
 
 import (
 	"encoding/json"
-	gpd "groupie/data"
+	gpd "groupie/internal/models"
 	"io"
 	"net/http"
 	"strconv"

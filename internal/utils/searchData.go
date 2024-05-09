@@ -1,7 +1,7 @@
 package groupie
 
 import (
-	gpd "groupie/data"
+	gpd "groupie/internal/models"
 	"strings"
 )
 
@@ -16,12 +16,6 @@ func isArtistUnique(artist gpd.Artists, bandMembers map[string]bool) bool {
 	return true
 }
 
-// SearchData filters the dataset based on the search term and search type.
-// It returns a subset of the data where the search term matches any artist's name,
-// member name, or location, depending on the search type specified.
-// If searchType is 0, it performs a general search across multiple fields.
-// If searchType is non-zero, it assumes the value represents a creation date and filters accordingly.
-// The function ensures no duplicate artists are included in the results.
 func SearchData(searchTerm string, searchType int, allData gpd.Data) gpd.Data {
 	var dataSearch gpd.Data
 	bandMembers := make(map[string]bool)

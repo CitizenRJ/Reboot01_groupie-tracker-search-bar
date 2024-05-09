@@ -1,7 +1,8 @@
 package groupie
 
 import (
-	gpd "groupie/data"
+	gpd "groupie/internal/models"
+	gpf "groupie/internal/utils"
 	"strconv"
 )
 
@@ -57,21 +58,10 @@ func GetAll(data gpd.Data) []string {
 	combinedList = append(combinedList, firstAlbums...)
 	combinedList = append(combinedList, creationDates...)
 	for _, element := range combinedList {
-		if !Isin(element, uniqueList) {
+		if !gpf.Isin(element, uniqueList) {
 			uniqueList = append(uniqueList, element)
 		}
 	}
 
 	return uniqueList
-}
-
-// Isin checks if a given string element exists in a string slice list.
-// It iterates through the list and returns true if the element is found, false otherwise.
-func Isin(element string, list []string) bool {
-	for _, item := range list {
-		if item == element {
-			return true
-		}
-	}
-	return false
 }

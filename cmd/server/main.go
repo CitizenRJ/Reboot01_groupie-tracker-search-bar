@@ -46,7 +46,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	templateInstance = template.Must(template.ParseFiles(templatePath))
-	err = templateInstance.Execute(w, allData) // Handle template execution error
+	err = templateInstance.Execute(w, allData)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -55,26 +55,26 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 
 func handleSearch(w http.ResponseWriter, r *http.Request) {
 	query := r.FormValue("input")
-	parsedQuery, _ := strconv.Atoi(query) // Handle error
+	parsedQuery, _ := strconv.Atoi(query)
 	resultSet := gpf.SearchData(query, parsedQuery, allData)
 
 	var pageTemplate *template.Template
 	if len(resultSet.Artist) == 0 {
-		templatePath, err := getTemplatePath("home.html") // Use relative path or path manipulation functions
+		templatePath, err := getTemplatePath("home.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		pageTemplate = template.Must(template.ParseFiles(templatePath)) // no results page
+		pageTemplate = template.Must(template.ParseFiles(templatePath))
 	} else {
-		templatePath, err := getTemplatePath("home.html") // Use relative path or path manipulation functions
+		templatePath, err := getTemplatePath("home.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		pageTemplate = template.Must(template.ParseFiles(templatePath)) // artists page
+		pageTemplate = template.Must(template.ParseFiles(templatePath))
 	}
-	err := pageTemplate.Execute(w, resultSet) // Handle template execution error
+	err := pageTemplate.Execute(w, resultSet)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -102,21 +102,21 @@ func handleFilter(w http.ResponseWriter, r *http.Request) {
 
 	var templateInstance *template.Template
 	if len(filteredData.Artist) == 0 {
-		templatePath, err := getTemplatePath("home.html") // Use relative path or path manipulation functions
+		templatePath, err := getTemplatePath("home.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		templateInstance = template.Must(template.ParseFiles(templatePath)) // no results page
+		templateInstance = template.Must(template.ParseFiles(templatePath))
 	} else {
-		templatePath, err := getTemplatePath("home.html") // Use relative path or path manipulation functions
+		templatePath, err := getTemplatePath("home.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		templateInstance = template.Must(template.ParseFiles(templatePath)) // artists page
+		templateInstance = template.Must(template.ParseFiles(templatePath))
 	}
-	err := templateInstance.Execute(w, filteredData) // Handle template execution error
+	err := templateInstance.Execute(w, filteredData)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -125,19 +125,19 @@ func handleFilter(w http.ResponseWriter, r *http.Request) {
 
 func handleInfos(w http.ResponseWriter, r *http.Request) {
 	identifier := r.FormValue("id")
-	artistIdentifier, _ := strconv.Atoi(identifier) // Handle error
+	artistIdentifier, _ := strconv.Atoi(identifier)
 	artistIdentifier = artistIdentifier - 1
 
 	artistInformation := gpf.InfoArtist(allData, artistIdentifier)
 
 	var templatePointer *template.Template
-	templatePath, err := getTemplatePath("info.html") // Use relative path or path manipulation functions
+	templatePath, err := getTemplatePath("info.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	templatePointer = template.Must(template.ParseFiles(templatePath)) // info html page
-	err = templatePointer.Execute(w, artistInformation)                // Handle template execution error
+	templatePointer = template.Must(template.ParseFiles(templatePath))
+	err = templatePointer.Execute(w, artistInformation)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

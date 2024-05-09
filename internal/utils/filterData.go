@@ -6,8 +6,16 @@ import (
 	"strings"
 )
 
-// FilterData filters the provided data based on the criteria specified in the parameters.
-// It returns a new Data struct containing only the filtered data.
+// FilterData filters the provided data based on the given criteria and returns the filtered data.
+//
+// allData is the full set of data to be filtered.
+// buttonAll is a string indicating whether the "All" button is selected.
+// tabButtons is a slice of integers representing the number of members in the artist groups to filter by.
+// selectedCity is a string representing the selected city to filter by.
+// minCreationYear is an integer representing the minimum creation year for the artist to be included.
+// minAlbumYear is an integer representing the minimum album year for the artist to be included.
+//
+// The function returns the filtered data as a gpd.Data struct.
 func FilterData(allData gpd.Data, buttonAll string, tabButtons []int, selectedCity string, minCreationYear int, minAlbumYear int) gpd.Data {
 	var filteredData gpd.Data
 	var albumYears []int

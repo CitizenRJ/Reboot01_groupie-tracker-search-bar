@@ -5,7 +5,10 @@ import (
 	"strings"
 )
 
-// isArtistUnique checks if an artist is unique based on both the artist's name and the member's name.
+// isArtistUnique checks if the given artist is unique within the provided bandMembers map.
+// It iterates through the artist's members and checks if any of them have already been seen.
+// If a member is found that has already been seen, the function returns false, indicating the artist is not unique.
+// Otherwise, it returns true, indicating the artist is unique.
 func isArtistUnique(artist gpd.Artists, bandMembers map[string]bool) bool {
 	for _, member := range artist.Members {
 		key := artist.Name + member
@@ -16,6 +19,10 @@ func isArtistUnique(artist gpd.Artists, bandMembers map[string]bool) bool {
 	return true
 }
 
+// SearchData searches the provided data for matches based on the given search term and search type.
+// If the search type is 0, it searches for the search term in the artist name, first album, and location.
+// If the search type is not 0, it searches for artists with a creation date matching the search type.
+// The function returns a new Data struct containing the matching artists.
 func SearchData(searchTerm string, searchType int, allData gpd.Data) gpd.Data {
 	var dataSearch gpd.Data
 	bandMembers := make(map[string]bool)

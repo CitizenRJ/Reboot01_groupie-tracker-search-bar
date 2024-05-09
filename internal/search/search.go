@@ -6,11 +6,9 @@ import (
 	"strconv"
 )
 
-// GetAll processes the artist and location data to generate a list
-// of unique strings containing all artist names, member names,
-// locations, first albums, and creation dates. It replaces spaces
-// with slashes in the names, converts the creation dates to strings,
-// and de-duplicates the list before returning it.
+// GetAll retrieves a list of unique strings from the provided Data, including artist names, member names,
+// location positions, first albums, and creation dates. The strings are processed to replace spaces with
+// forward slashes.
 func GetAll(data gpd.Data) []string {
 	artistNames := []string{}
 	memberNames := []string{}
@@ -46,10 +44,7 @@ func GetAll(data gpd.Data) []string {
 	}
 
 	for _, location := range data.Location {
-		for _, position := range location.Locations {
-			positions = append(positions, position)
-		}
-
+		positions = append(positions, location.Locations...)
 	}
 
 	combinedList = append(combinedList, artistNames...)

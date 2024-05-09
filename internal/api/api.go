@@ -10,9 +10,14 @@ import (
 	"strings"
 )
 
+// global variables that holds data
 var ApiData gpd.API
 var GroupData gpd.Data
 
+// GetData fetches data from the Groupie Trackers API and returns the parsed Date, Artists, Location, and Relations data.
+// The function makes HTTP GET requests to the API endpoints specified in the ApiData struct, reads the response bodies,
+// and unmarshals the JSON data into the corresponding data structures.
+// The function returns the fetched data, which can then be used to set the application's data state.
 func GetData() (gpd.Date, []gpd.Artists, gpd.GetLocation, gpd.Relations) {
 	response, _ := http.Get("https://groupietrackers.herokuapp.com/api")
 
@@ -42,6 +47,10 @@ func GetData() (gpd.Date, []gpd.Artists, gpd.GetLocation, gpd.Relations) {
 	return DateData, ArtistsData, LocationData, RelationData
 }
 
+// SetData sets the global GroupData variable with the provided date, artists, location, and relation data.
+// It also generates a SearchData slice that contains the location and date information for each relation,
+// and a list of all unique locations and countries represented in the data.
+// The function returns the updated GroupData struct.
 func SetData(date gpd.Date, artists []gpd.Artists, location gpd.GetLocation, relation gpd.Relations) gpd.Data {
 
 	GroupData.Date = date.Index

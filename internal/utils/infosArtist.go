@@ -5,10 +5,9 @@ import (
 	gpd "groupie/internal/models"
 )
 
-// InfoArtist returns an ArtistInfo struct containing detailed information
-// about the artist at the given index in the provided Data struct. It
-// populates the struct with data from the Data as well as calling CreateMap
-// to generate related map data.
+// InfoArtist returns an ArtistInfo struct containing information about an artist at the given index in the provided Data.
+// It extracts the artist name, location, and all locations from the Data, and creates a map of the artist's information.
+// It also processes the date information, removing any leading "*" characters.
 func InfoArtist(allData gpd.Data, index int) gpd.ArtistInfo {
 	dateInfo := allData.Date[index]
 	artistDetails := gpd.ArtistInfo{}

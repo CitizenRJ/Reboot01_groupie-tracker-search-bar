@@ -8,11 +8,10 @@ import (
 	"strconv"
 )
 
-// CreateMap generates a map URL with pins for the given locations.
-// It takes the full data set and an index to select the desired location group.
-// It geocodes each location name into latitude/longitude coordinates.
-// It then constructs a map URL using the map API that pins each location.
-// The returned URL can be used to display an interactive map of the locations.
+// CreateMap generates a static map URL based on the locations provided in the given Data.
+// It iterates through the locations, retrieves their geocoded coordinates from the Mapbox API,
+// and constructs a static map URL with pins for each location.
+// The resulting map URL can be used to display a map with the specified locations.
 func CreateMap(allData gpd.Data, index int) string {
 	var featureCollections []gpd.FeatureCollection
 	mapURL := ""

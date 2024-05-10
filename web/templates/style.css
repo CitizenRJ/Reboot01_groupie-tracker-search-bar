@@ -21,10 +21,12 @@ body {
   width: 450px;
   margin: 0 auto;
   padding-top: 20px;
+  display: flex;
+  align-items: center;
 }
 
 input#search-bar {
-  margin: 0 auto;
+  margin: 0;
   width: 90%;
   height: 45px;
   padding: 0 20px;
@@ -35,34 +37,38 @@ input#search-bar {
     border: 1px solid #008ABF;
     transition: 0.35s ease;
     color: #008ABF;
-    &::-webkit-input-placeholder{
-      transition: opacity 0.45s ease; 
-        opacity: 0;
-     }
+    &::-webkit-input-placeholder {
+      transition: opacity 0.45s ease;
+      opacity: 0;
+    }
     &::-moz-placeholder {
-      transition: opacity 0.45s ease; 
-        opacity: 0;
-     }
+      transition: opacity 0.45s ease;
+      opacity: 0;
+    }
     &:-ms-placeholder {
-     transition: opacity 0.45s ease; 
-       opacity: 0;
-     }    
+      transition: opacity 0.45s ease;
+      opacity: 0;
+    }
   }
 }
 
-/* .search-icon {
-  position: relative;
-  float: right;
-  width: 75px;
-  height: 75px;
-  top: -62px;
-  right: -10px;
-} */
-
 .search-icon {
-  height: 30px;
+  width: 40px; /* Increase the width */
+  height: 40px; /* Increase the height */
+  margin-left: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
   display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.search-icon img {
+  width: 200%; /* Make the image fill the container */
+  height: 200%;
+}
+
 
 .container {
   position: relative;

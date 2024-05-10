@@ -2,25 +2,22 @@ package groupie
 
 import (
 	"encoding/json"
-	gpd "groupie/internal/models"
-	gps "groupie/internal/search"
-	gpf "groupie/internal/utils"
 	"io"
 	"net/http"
 	"strings"
+
+	gpd "groupie/internal/models"
+	gps "groupie/internal/search"
+	gpf "groupie/internal/utils"
 )
 
-// global variables that holds data
+// Global variables that hold data
 var ApiData gpd.API
 var GroupData gpd.Data
 
 // GetData fetches data from the Groupie Trackers API and returns the parsed Date, Artists, Location, and Relations data.
-// The function makes HTTP GET requests to the API endpoints specified in the ApiData struct, reads the response bodies,
-// and unmarshals the JSON data into the corresponding data structures.
-// The function returns the fetched data, which can then be used to set the application's data state.
 func GetData() (gpd.Date, []gpd.Artists, gpd.GetLocation, gpd.Relations) {
 	response, _ := http.Get("https://groupietrackers.herokuapp.com/api")
-
 	responseData, _ := io.ReadAll(response.Body)
 	json.Unmarshal(responseData, &ApiData)
 
@@ -48,13 +45,9 @@ func GetData() (gpd.Date, []gpd.Artists, gpd.GetLocation, gpd.Relations) {
 }
 
 // SetData sets the global GroupData variable with the provided date, artists, location, and relation data.
-// It also generates a SearchData slice that contains the location and date information for each relation,
-// and a list of all unique locations and countries represented in the data.
-// The function returns the updated GroupData struct.
 func SetData(date gpd.Date, artists []gpd.Artists, location gpd.GetLocation, relation gpd.Relations) gpd.Data {
-
 	GroupData.Date = date.Index
-	for i := 0; i < (len(artists)); i++ {
+	for i := 0; i < len(artists); i++ {
 		GroupData.Artist = append(GroupData.Artist, artists[i])
 	}
 	GroupData.Location = location.Index
@@ -81,28 +74,43 @@ func SetData(date gpd.Date, artists []gpd.Artists, location gpd.GetLocation, rel
 
 	GroupData.Locs = SearchData
 
-	for i := 0; i < (len(GroupData.Artist)); i++ {
+	for i := 0; i < len(GroupData.Artist); i++ {
 		GroupData.NumMembers = append(GroupData.NumMembers, len(GroupData.Artist[i].Members))
 	}
 
 	GroupData.All = gps.GetAll(GroupData)
 
-	for i := 0; i < len(GroupData.Locs); i++ {
-		for j := 0; j < len(GroupData.Locs[i]); j++ {
-			for k := 0; k < len(GroupData.Locs[i][j]); k++ {
-				if strings.Contains(GroupData.Locs[i][j][k], " : ") {
-					location := strings.Split(GroupData.Locs[i][j][k], " : ")[0]
-					if !gpf.Isin(location, GroupData.All) {
-						GroupData.All = append(GroupData.All, location)
-					}
-				}
-			}
+	// Deduplicate locations
+	uniqueLocations := make(map[string]bool)
+	for i := 0; i < len(GroupData.Location); i++ {
+		for _, location := range GroupData.Location[i].Locations {
+			uniqueLocations[location] = true
+		}
+	}
+
+	var deduplicatedLocations []string
+	for location := range uniqueLocations {
+		deduplicatedLocations = append(deduplicatedLocations, location)
+	}
+
+	GroupData.Location = make([]struct {
+		Id        int      `json:"id"`
+		Locations []string `json:"locations"`
+	}, len(deduplicatedLocations))
+
+	for i, location := range deduplicatedLocations {
+		GroupData.Location[i] = struct {
+			Id        int      `json:"id"`
+			Locations []string `json:"locations"`
+		}{
+			Id:        i + 1,
+			Locations: []string{location},
 		}
 	}
 
 	var countriesList []string
-	for i := 0; i < (len(GroupData.Location)); i++ {
-		for j := 0; j < (len(GroupData.Location[i].Locations)); j++ {
+	for i := 0; i < len(GroupData.Location); i++ {
+		for j := 0; j < len(GroupData.Location[i].Locations); j++ {
 			country := strings.Split(GroupData.Location[i].Locations[j], "-")[1]
 			if !gpf.Isin(country, countriesList) {
 				countriesList = append(countriesList, country)

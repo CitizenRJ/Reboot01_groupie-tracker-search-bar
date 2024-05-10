@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-
 <html lang="en">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title> {{.Artist.Name}} </title>
+        <title>{{.Artist.Name}}</title>
         <link rel="stylesheet" href="/style.css">
         <link rel="icon" href="{{.Artist.Image}}">
     </head>
@@ -14,8 +13,10 @@
         <h1 class="artist">{{.Artist.Name}}</h1>
 
         <div class="dates">
-            <p class="bold"> Creation Date: {{.Artist.Creation_date}} <br>
-            Fist Album: {{.Artist.First_album}} </p>
+            <p class="bold">
+                Creation Date: {{.Artist.Creation_date}}<br>
+                Fist Album: {{.Artist.First_album}}
+            </p>
         </div>
 
         <div class="bandImage">
@@ -33,11 +34,15 @@
 
         <div class="relation">
             <p class="bold">Locations & Dates</p>
-            <p class="mini"> {{ range $artist := .All}} </p>
-            <p> {{ range $t:= $artist }} </p>
-            <p>{{ $t }}</p>
-            <p> {{ end }} </p>
-            <p> {{ end }} </p>
+            <p class="mini">
+                {{range $artist := .All}}
+                <p>
+                    {{range $t := $artist}}
+                    <p>{{$t}}</p>
+                    {{end}}
+                </p>
+                {{end}}
+            </p>
         </div>
     </body>
 </html>

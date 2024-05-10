@@ -6,6 +6,7 @@ body {
   background-color: #e7ecef;
 }
 
+/* Heading */
 .heading {
   text-align: center;
   padding-top: 1%;
@@ -13,6 +14,7 @@ body {
   font-size: 25px;
 }
 
+/* Search */
 .searchPos {
   margin: 0 auto;
 }
@@ -33,18 +35,22 @@ input#search-bar {
   font-size: 1rem;
   border: 1px solid #D0CFCE;
   outline: none;
+
   &:focus {
     border: 1px solid #008ABF;
     transition: 0.35s ease;
     color: #008ABF;
+
     &::-webkit-input-placeholder {
       transition: opacity 0.45s ease;
       opacity: 0;
     }
+
     &::-moz-placeholder {
       transition: opacity 0.45s ease;
       opacity: 0;
     }
+
     &:-ms-placeholder {
       transition: opacity 0.45s ease;
       opacity: 0;
@@ -53,8 +59,8 @@ input#search-bar {
 }
 
 .search-icon {
-  width: 40px; /* Increase the width */
-  height: 40px; /* Increase the height */
+  width: 40px;
+  height: 40px;
   margin-left: 10px;
   background: none;
   border: none;
@@ -65,11 +71,11 @@ input#search-bar {
 }
 
 .search-icon img {
-  width: 200%; /* Make the image fill the container */
+  width: 200%;
   height: 200%;
 }
 
-
+/* Container */
 .container {
   position: relative;
   width: 1100px;
@@ -89,7 +95,7 @@ input#search-bar {
   padding: 20px 15px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
   transition: 0.3s ease-in-out;
 }
 
@@ -104,7 +110,7 @@ input#search-bar {
   top: -60px;
   left: 20px;
   z-index: 1;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }
 
 .container .card .imgBx img {
@@ -130,6 +136,7 @@ input#search-bar {
   transition-delay: 0.3s;
 }
 
+/* General */
 h2 {
   margin: 0%;
 }
@@ -155,6 +162,7 @@ a:hover {
   border-radius: 25px;
 }
 
+/* Info Page */
 .title {
   text-align: center;
   padding: 10px;

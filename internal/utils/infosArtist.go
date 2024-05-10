@@ -11,18 +11,29 @@ import (
 func InfoArtist(allData gpd.Data, index int) gpd.ArtistInfo {
 	dateInfo := allData.Date[index]
 	artistDetails := gpd.ArtistInfo{}
+
 	artistDetails.Artist = allData.Artist[index]
 	artistDetails.Location = allData.Location[index]
 	artistDetails.All = allData.Locs[index]
 
+	artistDetails.Date = processDateInfo(dateInfo)
+	artistDetails.Maps = gpm.CreateMap(allData, index)
+
+	return artistDetails
+}
+
+func processDateInfo(dateInfo struct {
+	Id    int      `json:"id"`
+	Dates []string `json:"dates"`
+}) struct {
+	Id    int      `json:"id"`
+	Dates []string `json:"dates"`
+} {
 	for i := 0; i < len(dateInfo.Dates); i++ {
 		if string(dateInfo.Dates[i][0]) == "*" {
 			dateInfo.Dates[i] = dateInfo.Dates[i][1:]
 		}
 	}
 
-	artistDetails.Date = dateInfo
-	artistDetails.Maps = gpm.CreateMap(allData, index)
-
-	return artistDetails
+	return dateInfo
 }

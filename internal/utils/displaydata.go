@@ -6,10 +6,12 @@ import gpd "groupie/internal/models"
 // It creates a new Artist struct with the name, image, and ID from the all data at the given index,
 // appends it to the current data's Artist slice, and returns the updated current data's Artist slice.
 func DisplayData(index int, currentData gpd.Data, allData gpd.Data) []gpd.Artists {
-	var Artist gpd.Artists
-	Artist.Name = allData.Artist[index].Name
-	Artist.Image = allData.Artist[index].Image
-	Artist.Id = allData.Artist[index].Id
-	currentData.Artist = append(currentData.Artist, Artist)
+	var artist gpd.Artists
+	artist.Name = allData.Artist[index].Name
+	artist.Image = allData.Artist[index].Image
+	artist.Id = allData.Artist[index].Id
+
+	currentData.Artist = append(currentData.Artist, artist)
+
 	return currentData.Artist
 }

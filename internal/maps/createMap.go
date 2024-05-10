@@ -2,10 +2,11 @@ package groupie
 
 import (
 	"encoding/json"
-	gpd "groupie/internal/models"
 	"io"
 	"net/http"
 	"strconv"
+
+	gpd "groupie/internal/models"
 )
 
 // CreateMap generates a static map URL based on the locations provided in the given Data.
@@ -17,19 +18,8 @@ func CreateMap(allData gpd.Data, index int) string {
 	mapURL := ""
 
 	for _, location := range allData.Location[index].Locations {
-
 		var featureCollection gpd.FeatureCollection
-		locationName := ""
-		apiURL := ""
-		hasDash := false
-		for _, letter := range location {
-			if string(letter) != "-" && !hasDash {
-				locationName += string(letter)
-			} else if string(letter) == "-" {
-				hasDash = true
-			}
-		}
-		apiURL = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + locationName + ".json?access_token=pk.eyJ1IjoibWF0c3VlbGwiLCJhIjoiY2xkbjNoMTgzMGZseDN1bHgybjgwbmFnOCJ9.qUR-JuwsRM69PeuHEcVo4A"
+		_, apiURL := getLocationNameAndAPIURL(location)
 
 		response, _ := http.Get(apiURL)
 		responseData, _ := io.ReadAll(response.Body)
@@ -39,7 +29,26 @@ func CreateMap(allData gpd.Data, index int) string {
 	}
 
 	mapURL = "https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/"
+	mapURL = appendPinsToMapURL(mapURL, featureCollections)
 
+	return mapURL
+}
+
+func getLocationNameAndAPIURL(location string) (string, string) {
+	locationName := ""
+	hasDash := false
+	for _, letter := range location {
+		if string(letter) != "-" && !hasDash {
+			locationName += string(letter)
+		} else if string(letter) == "-" {
+			hasDash = true
+		}
+	}
+	apiURL := "https://api.mapbox.com/geocoding/v5/mapbox.places/" + locationName + ".json?access_token=pk.eyJ1IjoibWF0c3VlbGwiLCJhIjoiY2xkbjNoMTgzMGZseDN1bHgybjgwbmFnOCJ9.qUR-JuwsRM69PeuHEcVo4A"
+	return locationName, apiURL
+}
+
+func appendPinsToMapURL(mapURL string, featureCollections []gpd.FeatureCollection) string {
 	for i, feature := range featureCollections {
 		longitude := strconv.FormatFloat(feature.Features[0].Center[0], 'g', 9, 32)
 		latitude := strconv.FormatFloat(feature.Features[0].Center[1], 'g', 9, 32)
@@ -49,6 +58,5 @@ func CreateMap(allData gpd.Data, index int) string {
 			mapURL += "pin-l-music+f74e4e(" + longitude + "," + latitude + "),"
 		}
 	}
-
 	return mapURL
 }

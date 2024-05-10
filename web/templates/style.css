@@ -50,13 +50,18 @@ input#search-bar {
   }
 }
 
-.search-icon {
+/* .search-icon {
   position: relative;
   float: right;
   width: 75px;
   height: 75px;
   top: -62px;
   right: -10px;
+} */
+
+.search-icon {
+  height: 30px;
+  display: flex;
 }
 
 .container {

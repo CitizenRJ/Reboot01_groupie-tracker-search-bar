@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groupie Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#search-input').on('input', function () {
+                var query = $(this).val();
+                if (query.length > 0) {
+                    $.get('/suggestions?q=' + query, function (data) {
+                        var suggestions = '';
+                        for (var i = 0; i < data.length; i++) {
+                            suggestions += '<li>' + data[i].name + ' - ' + data[i].type + '</li>';
+                        }
+                        $('#suggestions').html(suggestions);
+                    });
+                } else {
+                    $('#suggestions').empty();
+                }
+            });
+
+            $('#suggestions').on('click', 'li', function () {
+                $('#search-input').val($(this).text());
+                $('#suggestions').empty();
+            });
+
+            $('#search-form').on('submit', function (event) {
+                event.preventDefault();
+                var query = $('#search-input').val();
+                window.location.href = '/info?q=' + encodeURIComponent(query);
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div class="heading">
+        <h1>Groupie Tracker</h1>
+    </div>
+
+    <div class="searchPos">
+        <form id="search-form" class="search-container">
+            <input list="browse" name="input" type="text" id="search-input"
+                placeholder="What can I help you with today?" autocomplete="off">
+            <button type="submit" class="search-icon">
+                <img class="search-icon" src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"
+                    alt="Search Icon">
+            </button>
+        </form>
+        <ul id="suggestions"></ul>
+    </div>
+
+    <div class="container">
+        {{range .}}
+        <div class="card">
+            <div class="imgBx">
+                <a href="/info?q={{.Name}} - artist/band">
+                    <img src="{{.Image}}" alt="{{.Name}}">
+                </a>
+            </div>
+            <div class="content">
+                <h2>{{.Name}}</h2>
+                <p><b>Members:</b></p>
+                <ul class="members-list">
+                    {{range .Members}}
+                    <li>{{.}}</li>
+                    {{end}}
+                </ul>
+                <p><a href="/info?q={{.Name}} - artist/band">View More</a></p>
+            </div>
+        </div>
+        {{end}}
+    </div>
+</body>
+
+</html>

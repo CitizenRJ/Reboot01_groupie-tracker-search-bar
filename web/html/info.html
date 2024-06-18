@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results for "{{.Query}}"</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <div class="heading">
+        <h1>Search Results for "{{.Query}}"</h1>
+    </div>
+
+    {{if eq .SearchType "location"}}
+    <h2>Bands with Concerts in "{{.Query}}":</h2>
+    {{range .Bands}}
+    <div class="info-container">
+        <div class="image-container">
+            <img src="{{.Image}}" alt="{{.Name}}">
+        </div>
+        <div class="details-container">
+            <h3>{{.Name}}</h3>
+            <p><b>Concert Dates in {{$.Query}}:</b></p>
+            <ul class="concerts-list">
+                {{range $location, $dates := .Concerts}}
+                {{if eq $location $.Query}}
+                {{range $dates}}
+                <li>{{.}}</li>
+                {{end}}
+                {{end}}
+                {{end}}
+            </ul>
+        </div>
+    </div>
+    {{end}}
+    {{else if eq .SearchType "creation date"}}
+    <h2>Bands Created in "{{.Query}}":</h2>
+    {{range .Bands}}
+    <div class="info-container">
+        <div class="image-container">
+            <img src="{{.Image}}" alt="{{.Name}}">
+        </div>
+        <div class="details-container">
+            <h3>{{.Name}}</h3>
+            <p><b>Creation Date:</b> {{.CreationDate}}</p>
+            <p><b>First Album:</b> {{.FirstAlbum}}</p>
+        </div>
+    </div>
+    {{end}}
+    {{else if eq .SearchType "first album"}}
+    <h2>Bands with First Album "{{.Query}}":</h2>
+    {{range .Bands}}
+    <div class="info-container">
+        <div class="image-container">
+            <img src="{{.Image}}" alt="{{.Name}}">
+        </div>
+        <div class="details-container">
+            <h3>{{.Name}}</h3>
+            <p><b>First Album:</b> {{.FirstAlbum}}</p>
+            <p><b>Creation Date:</b> {{.CreationDate}}</p>
+        </div>
+    </div>
+    {{end}}
+    {{else if eq .SearchType "artist"}}
+    <h2>Artist "{{.Query}}":</h2>
+    {{range .Bands}}
+    <div class="info-container">
+        <div class="image-container">
+            <img src="{{.Image}}" alt="{{.Name}}">
+        </div>
+        <div class="details-container">
+            <h3>{{.Name}}</h3>
+            <p><b>Creation Date:</b> {{.CreationDate}}</p>
+            <p><b>First Album:</b> {{.FirstAlbum}}</p>
+        </div>
+    </div>
+    {{end}}
+    {{else if eq .SearchType "band"}}
+    <h2>Band "{{.Query}}":</h2>
+    {{range .Bands}}
+    <div class="info-container">
+        <div class="image-container">
+            <img src="{{.Image}}" alt="{{.Name}}">
+        </div>
+        <div class="details-container">
+            <h3>{{.Name}}</h3>
+            <p><b>Members:</b></p>
+            <ul class="members-list">
+                {{range .Members}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+            <p><b>Creation Date:</b> {{.CreationDate}}</p>
+            <p><b>First Album:</b> {{.FirstAlbum}}</p>
+        </div>
+    </div>
+    {{end}}
+    {{else if eq .SearchType "member"}}
+    <h2>Bands with Member "{{.Query}}":</h2>
+    {{range .Bands}}
+    <div class="info-container">
+        <div class="image-container">
+            <img src="{{.Image}}" alt="{{.Name}}">
+        </div>
+        <div class="details-container">
+            <h3>{{.Name}}</h3>
+            <p><b>Members:</b></p>
+            <ul class="members-list">
+                {{range .Members}}
+                <li>{{.}}</li>
+                {{end}}
+            </ul>
+        </div>
+    </div>
+    {{end}}
+    {{end}}
+
+    {{if eq (len .Bands) 0}}
+    <p>No results found for "{{.Query}}".</p>
+    {{end}}
+
+    <div class="back-link">
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+
+</html>

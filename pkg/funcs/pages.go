@@ -69,75 +69,97 @@ func InfoPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Split the search query into value and search type
 	parts := strings.Split(query, " - ")
-	value := parts[0]
-	searchType := "location"
+	value := strings.ToLower(parts[0])
+	searchType := "all" // Default to searching all fields
 	if len(parts) > 1 {
 		searchType = strings.TrimSpace(parts[1])
 	}
 
-	var bands []Band
+	var results struct {
+		Query      string
+		SearchType string
+		Bands      []Band
+		Locations  []string
+		Albums     []string
+		Members    []string
+		Dates      []uint
+	}
+
+	results.Query = value
+	results.SearchType = searchType
+
 	for _, b := range data {
 		switch searchType {
 		case "location":
-			if containsLocation(b.Concerts, value) {
-				bands = append(bands, b)
+			for loc := range b.Concerts {
+				if strings.Contains(strings.ToLower(loc), value) {
+					results.Locations = append(results.Locations, loc)
+					results.Bands = append(results.Bands, b)
+				}
 			}
 		case "creation date":
 			if strconv.FormatUint(uint64(b.CreationDate), 10) == value {
-				bands = append(bands, b)
+				results.Dates = append(results.Dates, b.CreationDate)
+				results.Bands = append(results.Bands, b)
 			}
 		case "first album":
-			if strings.EqualFold(b.FirstAlbum, value) {
-				bands = append(bands, b)
+			if strings.Contains(strings.ToLower(b.FirstAlbum), value) {
+				results.Albums = append(results.Albums, b.FirstAlbum)
+				results.Bands = append(results.Bands, b)
 			}
 		case "artist/band":
-			if strings.EqualFold(b.Name, value) {
-				bands = append(bands, b)
+			if strings.Contains(strings.ToLower(b.Name), value) {
+				results.Bands = append(results.Bands, b)
 			}
 		case "member":
 			for _, member := range b.Members {
-				if strings.EqualFold(member, value) {
-					bands = append(bands, b)
-					break
+				if strings.Contains(strings.ToLower(member), value) {
+					results.Members = append(results.Members, member)
+					results.Bands = append(results.Bands, b)
+				}
+			}
+		case "all":
+			if strings.Contains(strings.ToLower(b.Name), value) {
+				results.Bands = append(results.Bands, b)
+			}
+			for loc := range b.Concerts {
+				if strings.Contains(strings.ToLower(loc), value) {
+					results.Locations = append(results.Locations, loc)
+					results.Bands = append(results.Bands, b)
+				}
+			}
+			if strconv.FormatUint(uint64(b.CreationDate), 10) == value {
+				results.Dates = append(results.Dates, b.CreationDate)
+				results.Bands = append(results.Bands, b)
+			}
+			if strings.Contains(strings.ToLower(b.FirstAlbum), value) {
+				results.Albums = append(results.Albums, b.FirstAlbum)
+				results.Bands = append(results.Bands, b)
+			}
+			for _, member := range b.Members {
+				if strings.Contains(strings.ToLower(member), value) {
+					results.Members = append(results.Members, member)
+					results.Bands = append(results.Bands, b)
 				}
 			}
 		}
 	}
 
-	log.Println("Bands matching the search query:", bands)
-	log.Println("Search type:", searchType)
+	log.Printf("Search results: %+v", results)
 
-	if len(bands) == 0 {
-		log.Println("No bands found for the search query")
-		http.NotFound(w, r)
-		return
+	funcMap := template.FuncMap{
+		"join": strings.Join,
 	}
 
-	var resultType string
-	if searchType == "artist/band" {
-		if len(bands[0].Members) == 1 {
-			resultType = "artist"
-		} else {
-			resultType = "band"
-		}
-	} else {
-		resultType = searchType
-	}
-
-	tmpl, err := template.ParseFiles("../../web/html/info.html")
+	tmpl, err := template.New("info.html").Funcs(funcMap).ParseFiles("../../web/html/info.html")
 	if err != nil {
 		log.Println("Error parsing template:", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	err = tmpl.Execute(w, map[string]interface{}{
-		"Query":      value,
-		"Bands":      bands,
-		"SearchType": resultType,
-	})
+	err = tmpl.Execute(w, results)
 	if err != nil {
 		log.Println("Error executing template:", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -145,13 +167,4 @@ func InfoPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("Info page rendered successfully")
-}
-
-func containsLocation(concerts map[string][]string, location string) bool {
-	for l := range concerts {
-		if strings.EqualFold(l, location) {
-			return true
-		}
-	}
-	return false
 }

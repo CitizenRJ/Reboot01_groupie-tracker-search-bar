@@ -9,13 +9,29 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('#search-input').on('input', function () {
+            $('#search-bar').on('input', function () {
                 var query = $(this).val();
                 if (query.length > 0) {
                     $.get('/suggestions?q=' + query, function (data) {
                         var suggestions = '';
                         for (var i = 0; i < data.length; i++) {
-                            suggestions += '<li>' + data[i].name + ' - ' + data[i].type + '</li>';
+                            var suggestion = '';
+                            if (data[i].name) {
+                                suggestion += data[i].name + ' - ';
+                            }
+                            if (data[i].type) {
+                                suggestion += data[i].type;
+                            }
+                            if (data[i].firstAlbum) {
+                                suggestion += ' (First Album: ' + data[i].firstAlbum + ')';
+                            }
+                            if (data[i].creationDate) {
+                                suggestion += ' (Creation Date: ' + data[i].creationDate + ')';
+                            }
+                            if (data[i].location) {
+                                suggestion += ' (Location: ' + data[i].location + ')';
+                            }
+                            suggestions += '<option value="' + suggestion + '">';
                         }
                         $('#suggestions').html(suggestions);
                     });
@@ -24,14 +40,13 @@
                 }
             });
 
-            $('#suggestions').on('click', 'li', function () {
-                $('#search-input').val($(this).text());
+            $('#search-bar').on('change', function () {
                 $('#suggestions').empty();
             });
 
-            $('#search-form').on('submit', function (event) {
+            $('.search-container').on('submit', function (event) {
                 event.preventDefault();
-                var query = $('#search-input').val();
+                var query = $('#search-bar').val();
                 window.location.href = '/info?q=' + encodeURIComponent(query);
             });
         });
@@ -44,24 +59,18 @@
     </div>
 
     <div class="searchPos">
-        <form id="search-form" class="search-container">
-            <input list="browse" name="input" type="text" id="search-input"
-                placeholder="What can I help you with today?" autocomplete="off">
-            <button type="submit" class="search-icon">
-                <img class="search-icon" src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"
-                    alt="Search Icon">
-            </button>
+        <form class="search-container" action="/search" method="GET">
+            <input list="suggestions" type="text" id="search-bar" placeholder="What can I help you with today?">
+            <a href="#"><img class="search-icon" src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png"></a>
         </form>
-        <ul id="suggestions"></ul>
+        <datalist id="suggestions"></datalist>
     </div>
 
     <div class="container">
         {{range .}}
         <div class="card">
             <div class="imgBx">
-                <a href="/info?q={{.Name}} - artist/band">
-                    <img src="{{.Image}}" alt="{{.Name}}">
-                </a>
+                <img src="{{.Image}}" alt="{{.Name}}">
             </div>
             <div class="content">
                 <h2>{{.Name}}</h2>

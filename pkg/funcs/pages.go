@@ -143,6 +143,7 @@ func InfoPage(w http.ResponseWriter, r *http.Request) {
 					results.Bands = append(results.Bands, b)
 				}
 			}
+		
 		}
 	}
 

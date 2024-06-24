@@ -89,62 +89,68 @@ func InfoPage(w http.ResponseWriter, r *http.Request) {
 	results.Query = value
 	results.SearchType = searchType
 
+	uniqueBands := make(map[int]Band)
+
 	for _, b := range data {
 		switch searchType {
 		case "location":
 			for loc := range b.Concerts {
 				if strings.Contains(strings.ToLower(loc), value) {
 					results.Locations = append(results.Locations, loc)
-					results.Bands = append(results.Bands, b)
+					uniqueBands[b.Id] = b
 				}
 			}
 		case "creation date":
 			if strconv.FormatUint(uint64(b.CreationDate), 10) == value {
 				results.Dates = append(results.Dates, b.CreationDate)
-				results.Bands = append(results.Bands, b)
+				uniqueBands[b.Id] = b
 			}
 		case "first album":
 			if strings.Contains(strings.ToLower(b.FirstAlbum), value) {
 				results.Albums = append(results.Albums, b.FirstAlbum)
-				results.Bands = append(results.Bands, b)
+				uniqueBands[b.Id] = b
 			}
 		case "artist/band":
 			if strings.Contains(strings.ToLower(b.Name), value) {
-				results.Bands = append(results.Bands, b)
+				uniqueBands[b.Id] = b
 			}
 		case "member":
 			for _, member := range b.Members {
 				if strings.Contains(strings.ToLower(member), value) {
 					results.Members = append(results.Members, member)
-					results.Bands = append(results.Bands, b)
+					uniqueBands[b.Id] = b
 				}
 			}
 		case "all":
 			if strings.Contains(strings.ToLower(b.Name), value) {
-				results.Bands = append(results.Bands, b)
+				uniqueBands[b.Id] = b
 			}
 			for loc := range b.Concerts {
 				if strings.Contains(strings.ToLower(loc), value) {
 					results.Locations = append(results.Locations, loc)
-					results.Bands = append(results.Bands, b)
+					uniqueBands[b.Id] = b
 				}
 			}
 			if strconv.FormatUint(uint64(b.CreationDate), 10) == value {
 				results.Dates = append(results.Dates, b.CreationDate)
-				results.Bands = append(results.Bands, b)
+				uniqueBands[b.Id] = b
 			}
 			if strings.Contains(strings.ToLower(b.FirstAlbum), value) {
 				results.Albums = append(results.Albums, b.FirstAlbum)
-				results.Bands = append(results.Bands, b)
+				uniqueBands[b.Id] = b
 			}
 			for _, member := range b.Members {
 				if strings.Contains(strings.ToLower(member), value) {
 					results.Members = append(results.Members, member)
-					results.Bands = append(results.Bands, b)
+					uniqueBands[b.Id] = b
 				}
 			}
-		
 		}
+	}
+
+	// Convert unique bands map to slice
+	for _, band := range uniqueBands {
+		results.Bands = append(results.Bands, band)
 	}
 
 	log.Printf("Search results: %+v", results)
